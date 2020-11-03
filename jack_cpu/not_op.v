@@ -1,0 +1,37 @@
+module not_op(not_y, y);
+   input [31:0] y;
+   output [31:0] not_y;
+
+   not y0(not_y[0], y[0]);
+   not y1(not_y[1], y[1]);
+   not y2(not_y[2], y[2]);
+   not y3(not_y[3], y[3]);
+   not y4(not_y[4], y[4]);
+   not y5(not_y[5], y[5]);
+   not y6(not_y[6], y[6]);
+   not y7(not_y[7], y[7]);
+   not y8(not_y[8], y[8]);
+   not y9(not_y[9], y[9]);
+   not y10(not_y[10], y[10]);
+   not y11(not_y[11], y[11]);
+   not y12(not_y[12], y[12]);
+   not y13(not_y[13], y[13]);
+   not y14(not_y[14], y[14]);
+   not y15(not_y[15], y[15]);
+   not y16(not_y[16], y[16]);
+   not y17(not_y[17], y[17]);
+   not y18(not_y[18], y[18]);
+   not y19(not_y[19], y[19]);
+   not y20(not_y[20], y[20]);
+   not y21(not_y[21], y[21]);
+   not y22(not_y[22], y[22]);
+   not y23(not_y[23], y[23]);
+   not y24(not_y[24], y[24]);
+   not y25(not_y[25], y[25]);
+   not y26(not_y[26], y[26]);
+   not y27(not_y[27], y[27]);
+   not y28(not_y[28], y[28]);
+   not y29(not_y[29], y[29]);
+   not y30(not_y[30], y[30]);
+   not y31(not_y[31], y[31]);
+endmodule 
