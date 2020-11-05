@@ -13,13 +13,19 @@ module regfile (
 
 	wire [31:0] regWriteEnable, AregRead, BregRead;
 	wire [31:0] activewire;
-	wire we1,we2,we3,we4,we5,we6,we7,we8,we9,we10,we11,we12,we13,we14,we15,we16,we17,we18,we19,we20,we21,we22,we23,we24,we25,we26,we27,we28,we29,we30,we31;
+	wire we2,we3,we4,we5,we6,we7,we8,we9,we10,we11,we12,we13,we14,we15,we16,we17,we18,we19,we20,we21,we22,we23,we24,we25,we26,we27,we28,we29,we30,we31;
 	wire [31:0] o0,o1,o2,o3,o4,o5,o6,o7,o8,o9,o10,o11,o12,o13,o14,o15,o16,o17,o18,o19,o20,o21,o22,o23,o24,o25,o26,o27,o28,o29,o30,o31;
+
+	//get random number
+	//Q: how computationally expensive is constantly generating random numbers??
+	//Alluding to that we may only want to trigger random number generation upon READS to r1 register
+	//That is, assuming, we are not eliminating "randomness" due to short lifecycle
+	wire [31:0] random_val;
+	lfsr_32 lfsr(.value(random_val), .data(32'b0), .enable(1'b1), .clk(clock));
 
 	//take 5-bit number turn 1-bit on for corresponding register
 	decoder_32 decode(regWriteEnable, ctrl_writeReg);
 
-	and writeEnable1(we1, ctrl_writeEnable, regWriteEnable[1]);
 	and writeEnable2(we2, ctrl_writeEnable, regWriteEnable[2]);
 	and writeEnable3(we3, ctrl_writeEnable, regWriteEnable[3]);
 	and writeEnable4(we4, ctrl_writeEnable, regWriteEnable[4]);
@@ -53,7 +59,7 @@ module regfile (
 
 
 	gen_reg r0(o0, 32'b0, clock, 1'b0, 1'b0);
-	gen_reg r1(o1, data_writeReg, clock, we1, ctrl_reset);
+	gen_reg r1(o1, random_val, clock, 1'b1, 1'b0);
 	gen_reg r2(o2, data_writeReg, clock, we2, ctrl_reset);
 	gen_reg r3(o3, data_writeReg, clock, we3, ctrl_reset);
 	gen_reg r4(o4, data_writeReg, clock, we4, ctrl_reset);
