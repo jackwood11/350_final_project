@@ -1,0 +1,2 @@
+.text
+setx 1
