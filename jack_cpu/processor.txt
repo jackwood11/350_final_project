@@ -33,6 +33,7 @@ gen_reg_5.v
 get_ins_type.v
 hazard_detect.v
 is_zero.v
+lfsr_32.v
 multdiv.v
 multiplier.v
 mux_2.v

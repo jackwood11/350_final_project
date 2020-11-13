@@ -45,7 +45,7 @@ module Wrapper(clock, reset);
                   .data(memDataIn), .q_dmem(memDataOut)); 
                   
     ///// Instruction Memory (ROM)
-    ROM #(.MEMFILE("test_ovf.mem")) // Add your memory file here
+    ROM #(.MEMFILE("test_random.mem")) // Add your memory file here
     InstMem(.clk(clock), 
             .wEn(1'b0), 
             .addr(instAddr[11:0]), 

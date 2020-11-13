@@ -21,7 +21,7 @@ module regfile (
 	//Alluding to that we may only want to trigger random number generation upon READS to r1 register
 	//That is, assuming, we are not eliminating "randomness" due to short lifecycle
 	wire [31:0] random_val;
-	lfsr_32 lfsr(.value(random_val), .data(32'b0), .enable(1'b1), .clk(clock));
+	lfsr_32 lfsr(.out(random_val), .data(32'b0), .enable(1'b1), .clk(clock));
 
 	//take 5-bit number turn 1-bit on for corresponding register
 	decoder_32 decode(regWriteEnable, ctrl_writeReg);
@@ -57,9 +57,14 @@ module regfile (
 	and writeEnable30(we30, ctrl_writeEnable, regWriteEnable[30]);
 	and writeEnable31(we31, ctrl_writeEnable, regWriteEnable[31]);
 
-
+	wire [31:0] rand_ans;
+	wire [3:0] solution;
+	//taking out thirty bit random value and getting a random 1-10 # (four bits)
+	get_answer ThirtyTwoToTen(.q(solution), .d(random_val));
+	assign rand_ans[31:4]= 28'd0; //pad top part with zeros
+	assign rand_ans[3:0] = solution; //last four bits have a random # 1-10
 	gen_reg r0(o0, 32'b0, clock, 1'b0, 1'b0);
-	gen_reg r1(o1, random_val, clock, 1'b1, 1'b0);
+	gen_reg r1(o1, rand_ans, clock, 1'b1, 1'b0);
 	gen_reg r2(o2, data_writeReg, clock, we2, ctrl_reset);
 	gen_reg r3(o3, data_writeReg, clock, we3, ctrl_reset);
 	gen_reg r4(o4, data_writeReg, clock, we4, ctrl_reset);
