@@ -85,11 +85,13 @@ module VGA_controller_test(
     
     square gate(directions, clk, x, y, inSquare, screenEnd);
     
+
+	//POTENTIAL NEXT STEPS:
     wire [11:0] sprite_addr;
 	reg [11:0] count;
 	wire counter_reset;
 	// counter c(count, clk, counter_reset);
-	always @(posedge clk25) begin
+	always @(posedge clk) begin
 		if (inSquare)
 			count <= count + 1;
 		if (count >= 2500)
@@ -100,7 +102,7 @@ module VGA_controller_test(
 	assign sprite_addr = (ascii_data - 33) * 2500 + count;
 
 	RAM #(
-		.DEPTH(23500), 		       // Set depth to contain every color		
+		.DEPTH(4700), 		       // Set depth to contain every color		
 		.DATA_WIDTH(50), 		       // Set data width according to the bits per color
 		.ADDRESS_WIDTH(12),     // Set address width according to the color count
 		.MEMFILE("sprites.mem"))  // Memory initialization
@@ -115,7 +117,7 @@ module VGA_controller_test(
 
 	
 	wire [11:0] tempColorOut;
-	assign tempColorOut = !inSquare ? spriteColor : 12'h00f;
+	assign tempColorOut = !inSquare ? 12'h0000ff : 12'hffff00;
 
 
 
