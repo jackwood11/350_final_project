@@ -93,19 +93,21 @@ module VGAController(
 		.dataOut(colorData),				       // Color at current pixel
 		.wEn(1'b0)); 						       // We're always reading
 	
-	reg[14:0] small_address;
-	reg in_square;
+	wire [14:0] small_address;
+	wire in_square;
 	localparam
 		IMAGE_X_OFFSET = 50,
 		IMAGE_Y_OFFSET = 50;
 		
-	always @(x,y) begin
-	   if((x >= IMAGE_X_OFFSET && x < IMAGE_X_OFFSET + 138) && (y >= IMAGE_X_OFFSET && y < IMAGE_X_OFFSET + 138)) begin
-		   small_address <= (x-IMAGE_X_OFFSET) + (y-IMAGE_Y_OFFSET)*IMAGE_WIDTH;
-		   in_square <= 1;
-	   end
+    assign in_square = (x >= IMAGE_X_OFFSET && x < IMAGE_X_OFFSET + 138) && (y >= IMAGE_X_OFFSET && y < IMAGE_X_OFFSET + 138); 
+    assign small_address = (x-IMAGE_X_OFFSET) + (y-IMAGE_Y_OFFSET)*IMAGE_WIDTH; 
+		
+	//always @(x,y) begin
+	   //if((x >= IMAGE_X_OFFSET && x < IMAGE_X_OFFSET + 138) && (y >= IMAGE_X_OFFSET && y < IMAGE_X_OFFSET + 138)) begin
+		   //small_address <= (x-IMAGE_X_OFFSET) + (y-IMAGE_Y_OFFSET)*IMAGE_WIDTH;
+		   //in_square <= 1;
+	   //end
 	       
-	end
 		 
 
 	RAM #(
@@ -141,12 +143,19 @@ module VGAController(
 		.dataOut(correctDataOut),
 		.wEn(1'b0));
 	
-	reg check_up;
-	always @(posedge playerButton) begin
-		if(digit_1)
-			begin
-				check_up <= 1;
-			end
+	reg check_up = 0;
+	
+	always @(posedge clk25) begin
+	   if (playerButton) begin
+	       if(digit_1) begin
+	           check_up <= 1; 
+	       end
+	   end
+	       
+	 end 
+	            
+	//always @(posedge playerButton) begin
+
 	
 		
 		//read switch input 
@@ -155,7 +164,7 @@ module VGAController(
 		//so that we choose the corresponding ram for the right image. 
 
 		//can have a mux beforehand that assigns a single select register
-	end
+
 
 	// wire [3:0] directions;
 	// wire in_square;
