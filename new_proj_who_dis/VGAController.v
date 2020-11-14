@@ -4,6 +4,15 @@ module VGAController(
 	input reset, 		// Reset Signal
 	// input[14:0] switch_input, //15bits for switches!
 	input digit_1,
+	input digit_2, 
+	input digit_3, 
+	input digit_4, 
+	input digit_5, 
+	input digit_6, 
+	input digit_7, 
+	input digit_8, 
+	input digit_9, 
+	input digit_10,
 	input playerButton,
 	output hSync, 		// H Sync Signal
 	output vSync, 		// Veritcal Sync Signal
@@ -16,7 +25,7 @@ module VGAController(
 	//need inputs for all switches + button (1biteach)
 
 	// Lab Memory Files Location
-	localparam FILES_PATH = "C:/Users/jw543/Desktop/new_proj_who_dis/";
+	localparam FILES_PATH = "C:/Users/til3/Desktop/new_proj_who_dis/";
 
 	// Clock divider 100 MHz -> 25 MHz
 	wire clk25; // 25MHz clock
@@ -93,14 +102,27 @@ module VGAController(
 		.dataOut(colorData),				       // Color at current pixel
 		.wEn(1'b0)); 						       // We're always reading
 	
-	wire [14:0] small_address;
-	wire in_square;
+	wire [14:0] small_address, small_address_1;
+	wire in_square, in_square_1, in_square_2, in_square_3;
 	localparam
 		IMAGE_X_OFFSET = 50,
-		IMAGE_Y_OFFSET = 50;
+		IMAGE_Y_OFFSET = 50,
+		IMAGE_X_OFFSET1 = 190, 
+		IMAGE_Y_OFFSET1 = 50,
+		IMAGE_X_OFFSET2 = 328,
+		IMAGE_Y_OFFSET2 = 50, 
+		IMAGE_X_OFFSET3 = 470, 
+		IMAGE_Y_OFFSET3 = 50;
 		
     assign in_square = (x >= IMAGE_X_OFFSET && x < IMAGE_X_OFFSET + 138) && (y >= IMAGE_X_OFFSET && y < IMAGE_X_OFFSET + 138); 
-    assign small_address = (x-IMAGE_X_OFFSET) + (y-IMAGE_Y_OFFSET)*IMAGE_WIDTH; 
+    assign in_square_1 = (x >= IMAGE_X_OFFSET1 && x < IMAGE_X_OFFSET1 + 138) && (y >= IMAGE_Y_OFFSET1 && y < IMAGE_Y_OFFSET1 + 138);
+    assign in_square_2 = (x >= IMAGE_X_OFFSET2 && x < IMAGE_X_OFFSET2 + 138) && (y >= IMAGE_Y_OFFSET2 && y < IMAGE_Y_OFFSET2 + 138);
+     assign in_square_3 = (x >= IMAGE_X_OFFSET3 && x < IMAGE_X_OFFSET3 + 138) && (y >= IMAGE_Y_OFFSET3 && y < IMAGE_Y_OFFSET3 + 138);
+    
+    assign small_address = (x-IMAGE_X_OFFSET) + (y-IMAGE_Y_OFFSET)*IMAGE_WIDTH;
+    //assign small_address_1 = (x-IMAGE_X_OFFSET) + (y-IMAGE_Y_OFFSET)*IMAGE_WIDTH; 
+   
+    
 		
 	//always @(x,y) begin
 	   //if((x >= IMAGE_X_OFFSET && x < IMAGE_X_OFFSET + 138) && (y >= IMAGE_X_OFFSET && y < IMAGE_X_OFFSET + 138)) begin
@@ -144,18 +166,85 @@ module VGAController(
 		.wEn(1'b0));
 	
 	reg check_up = 0;
+	reg second = 0; 
 	
-	always @(posedge clk25) begin
-	   if (playerButton) begin
-	       if(digit_1) begin
-	           check_up <= 1; 
+	reg [3:0] counter;
+	reg [3:0] counter_next = 4'b0; 
+	reg [3:0] random_number = 4'd3; 
+	
+	always @(posedge playerButton) begin
+	   counter <= counter_next; 
+	   if(digit_1) begin
+	       if(4'd1 < random_number) begin
+	       
 	       end
+	       check_up <= 1; 
+	       counter_next = counter + 4'b1; 
 	   end
+	   if(digit_2) begin
+	       check_up <= 1;
+	       counter_next = counter + 4'b1;          
+	   end
+	       
+	   if(digit_3) begin
+	        check_up <= 1;
+	        counter_next = counter + 4'b1;  
+	   end
+	       
+	   if(digit_4) begin
+	        check_up <= 1;
+	        counter_next = counter + 4'b1; 
+	   end
+	      
+	   if(digit_5) begin
+	        check_up <= 1;
+	        counter_next = counter + 4'b1; 
+	   end
+	       
+	   if(digit_6) begin
+	        check_up <= 1;
+	        counter_next = counter + 4'b1; 
+	   end
+	       
+	   if(digit_7) begin
+	        check_up <= 1;
+	        counter_next = counter + 4'b1; 
+	   end
+	       
+	   if(digit_8) begin
+	        check_up <= 1;
+	        counter_next = counter + 4'b1; 
+	   end
+	       
+	   if(digit_9) begin
+	        check_up <= 1;
+	        counter_next = counter + 4'b1; 
+	   end
+	       
+	   if(digit_10) begin
+	         check_up <= 1;
+	         counter_next = counter + 4'b1; 
+	   end      
 	       
 	 end 
 	            
 	//always @(posedge playerButton) begin
+	//pick which square to write to, test position 1 and position 2
+	wire s1, s2, s3, s4, s5, s6, s7, s8, s9;
 
+	assign s1 = (counter == 4'd0); 
+	assign s2 = (counter == 4'd1); 
+	assign s3 = (counter == 4'd2);
+	assign s4 = (counter == 4'd3);  
+	
+	wire correct_square, correct_sq0, correct_sq1, correct_sq2, correct_sq3; 
+	
+	assign correct_sq0 = s1 ? in_square : in_square_1;
+	assign correct_sq1 = s2 ? in_square_1 : correct_sq0; 
+	assign correct_sq3 = s3 ? in_square_2 : correct_sq1; 
+	assign correct_square = s4 ? in_square_3 : correct_sq3;  
+	
+	//decide on which image 
 	
 		
 		//read switch input 
@@ -169,10 +258,13 @@ module VGAController(
 	// wire [3:0] directions;
 	// wire in_square;
 	// square check_pos(directions, clk, x, y, in_square, screenEnd);
-	wire [BITS_PER_COLOR-1: 0] pixelData;
-	assign pixelData = (check_up && upDataOut && in_square) ? 12'h0000ff: 12'd0;
+	wire [BITS_PER_COLOR-1: 0] pixelData, tempData0, tempData1, tempData_combine;
+	assign tempData0 = (check_up && upDataOut && correct_square) ? 12'h0000ff: 12'd0;
+	assign pixelData = (check_up && upDataOut && correct_square) ? 12'h0000ff : tempData0; 
 	
-	
+
+	//assign pixelData = check_up ? tempData0 : tempData1; 
+	//assign tempData_combine = (second && upDataOut && in_square_1 && check_up && in_square) ? (tempData0 && tempData1) : pixelData; 
 	
 	// Assign to output color from register if active
 	wire[BITS_PER_COLOR-1:0] colorOut; 			  // Output color 
